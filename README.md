@@ -72,4 +72,5 @@ La base usa el volumen `mandale-sql-data`. Conserva el archivo `.env` privado.
 - `database`: creación de esquema SQL Server.
 - `Dockerfile`, `docker-compose.yml`: empaquetado y ejecución local en contenedores.
 
-El APF3 adjunto también menciona pruebas automatizadas, despliegue en nube, BPM y documentación de diseño. Este paquete aporta el proyecto y la ejecución local en contenedores; esas evidencias académicas deben documentarse y sustentarse en el informe. La consigna pide que el aplicativo use 90% del lenguaje elegido; el backend y las reglas de negocio de esta solución están implementados en Java.
+Para esta entrega APF3, la consigna pide evidenciar MVC, TDD, DAO, SOLID, seguridad, al menos una librería de apoyo, Git/GitHub, avances versionados y una sustentación. La ejecución con Docker es una opción local adicional; no sustituye la publicación ni las evidencias de GitHub.
+
