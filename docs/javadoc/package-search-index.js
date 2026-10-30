@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html","k":"18"},{"l":"com.mandalecarbon"},{"l":"com.mandalecarbon.config"},{"l":"com.mandalecarbon.controller"},{"l":"com.mandalecarbon.model"},{"l":"com.mandalecarbon.repository"},{"l":"com.mandalecarbon.service"}];updateSearchResults();

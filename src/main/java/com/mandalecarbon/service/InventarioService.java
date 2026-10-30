@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/** Consulta y registra existencias de ingredientes e insumos. */
 @Service
 public class InventarioService {
     private final JdbcTemplate db;
@@ -15,6 +16,7 @@ public class InventarioService {
         this.db = db;
     }
 
+    /** Lista los elementos activos de un tipo y calcula su estado de stock. */
     @Transactional(readOnly = true)
     public List<Fila> listar(String tipo) {
         return db.query("""
@@ -33,6 +35,7 @@ public class InventarioService {
         }, tipo);
     }
 
+    /** Registra un elemento nuevo y su movimiento de entrada inicial, si aplica. */
     @Transactional
     public void crear(String nombre, String tipo, String categoria, String unidad,
                       BigDecimal stock, BigDecimal stockMinimo, String proveedor, Integer usuarioId) {

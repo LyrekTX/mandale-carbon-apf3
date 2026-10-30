@@ -52,6 +52,16 @@ Ejecuta `mvn test` para correr las pruebas unitarias. Las pruebas de servicios u
 
 Las funcionalidades se desarrollaron antes de añadir estas pruebas de regresión; para demostrar TDD en los siguientes cambios, primero escribe una prueba que falle, implementa la regla y vuelve a ejecutar la suite.
 
+## Documentación Javadoc
+
+Con un JDK 21 o superior y después de ejecutar Maven al menos una vez, genera la documentación con:
+
+```powershell
+.\docs\generar-javadoc.ps1
+```
+
+Abre `docs/javadoc/index.html` para consultar la documentación de paquetes, servicios, controladores, modelos y repositorios.
+
 ## Ejecutar en contenedores
 
 1. Copia `.env.example` como `.env` y cambia las tres contraseñas por valores propios.

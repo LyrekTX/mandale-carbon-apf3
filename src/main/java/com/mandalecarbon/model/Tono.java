@@ -4,7 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import org.springframework.stereotype.Component;
 
-/** Traduce el texto de un estado (operativo, de pago, de mesa, de stock) a un tono de color. Uso: ${@tono.de(x)} */
+/** Traduce el estado operativo a una clase de color que las vistas pueden presentar. */
 @Component("tono")
 public class Tono {
     private static final Map<String, String> TONOS = new LinkedHashMap<>();

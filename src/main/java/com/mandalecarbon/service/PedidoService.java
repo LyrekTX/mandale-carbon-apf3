@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+/** Coordina la creación de pedidos y el flujo de atención de salón. */
 @Service
 public class PedidoService {
     private final PedidoJpaRepository pedidos;
@@ -23,6 +24,13 @@ public class PedidoService {
         this.db = db;
     }
 
+    /**
+     * Crea el cliente y pedido, valida el canal y reserva la mesa cuando corresponde.
+     *
+     * @return código legible del pedido, con prefijo {@code MC-}
+     * @throws IllegalArgumentException si los datos del pedido no cumplen las reglas
+     * @throws IllegalStateException si la cuenta de personal no existe
+     */
     @Transactional
     public String crear(String nombre, String telefono, String canal, Integer usuarioId, List<Integer> productosIds,
                         java.util.Map<Integer, Integer> cantidades, Integer mesaId, String observacion,
@@ -63,6 +71,7 @@ public class PedidoService {
         return "MC-%04d".formatted(pedido.getId());
     }
 
+    /** Marca como atendido un pedido de salón que ya esté listo. */
     @Transactional
     public void marcarSalonAtendido(String codigo) {
         int id = Integer.parseInt(codigo.replace("MC-", ""));

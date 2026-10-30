@@ -6,9 +6,12 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/** Gestiona consultas, altas y estado de los clientes del restaurante. */
 @Service public class ClienteService{
  private final ClienteJpaRepository repo; public ClienteService(ClienteJpaRepository r){repo=r;}
+ /** Devuelve los clientes activos. */
  @Transactional(readOnly=true) public List<Cliente> listar(){return buscar(null,"Activos");}
+ /** Filtra clientes por texto y estado de actividad. */
  @Transactional(readOnly=true) public List<Cliente> buscar(String q,String estado){
   String filtro=q==null?"":q.trim().toLowerCase();
   return repo.findAll().stream()
@@ -17,8 +20,12 @@ import org.springframework.transaction.annotation.Transactional;
    .toList();
  }
  private boolean contiene(String valor,String filtro){return valor!=null&&valor.toLowerCase().contains(filtro);}
+ /** Busca un cliente por su identificador. */
  @Transactional(readOnly=true) public Optional<Cliente> obtener(Integer id){return repo.findById(id);}
+ /** Guarda los datos de un cliente. */
  @Transactional public Cliente guardar(Cliente c){return repo.save(c);}
+ /** Activa o desactiva al cliente indicado; falla si no existe. */
  @Transactional public void cambiarEstado(Integer id){Cliente c=repo.findById(id).orElseThrow();c.setActivo(!c.isActivo());repo.save(c);}
+ /** Cuenta los clientes registrados, activos e inactivos. */
  @Transactional(readOnly=true) public long total(){return repo.count();}
 }
