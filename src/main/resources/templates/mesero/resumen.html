@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Resumen de salón y pedidos')}"></head>
+<body>
+<div class="shell">
+  <aside th:replace="~{fragments/ui :: sidebar('Resumen')}"></aside>
+  <section>
+    <header class="topbar"><h1>Resumen de salón y pedidos</h1><a class="btn btn-primary" th:href="@{/mesero/crear}">+ Nuevo pedido</a></header>
+    <main class="content">
+      <div th:replace="~{fragments/ui :: kpis(${kpis},4)}"></div>
+      <div class="between"><h2 id="mesas">Mesas</h2><a th:href="@{/mesero/mesas}">Ver todas</a></div>
+      <div class="grid-4">
+        <div class="card mesa" th:each="mesa : ${mesas}">
+          <div class="between"><strong th:text="${mesa.nombre()}">Mesa 01</strong>
+            <span class="pill" th:classappend="'tono-' + ${@tono.de(mesa.estado())}" th:text="${mesa.estado()}">Ocupada</span></div>
+          <small th:text="${mesa.detalle()}">Detalle</small>
+          <a class="btn" th:if="${mesa.codigoPedido() != null}" th:href="@{/mesero/pedidos/{codigo}(codigo=${mesa.codigoPedido()})}">Ver pedido</a>
+          <a class="btn" th:if="${mesa.estado() == 'Libre'}" th:href="@{/mesero/crear(mesaId=${mesa.id()})}">Crear pedido en esta mesa</a>
+        </div>
+      </div>
+    </main>
+  </section>
+</div>
+</body>
+</html>

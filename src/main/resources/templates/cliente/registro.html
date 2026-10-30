@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Crear cuenta')}"></head>
+<body>
+<header th:replace="~{fragments/ui :: sitehead('Cuenta')}"></header>
+<main class="container narrow">
+  <div class="pagehead"><h1>Crear cuenta de cliente</h1><p>Registra tus datos para consultar tus pedidos desde tu cuenta.</p></div>
+  <form class="panel stack" method="post" th:action="@{/registro}">
+    <p class="note" th:if="${errorRegistro != null}" th:text="${errorRegistro}"></p>
+    <label class="field"><span>Nombre completo</span><input name="nombre" maxlength="120" required th:value="${nombre}"></label>
+    <label class="field"><span>Teléfono</span><input name="telefono" maxlength="20" inputmode="tel" th:value="${telefono}" placeholder="Opcional"></label>
+    <label class="field"><span>Correo</span><input type="email" name="correo" maxlength="120" autocomplete="email" required th:value="${correo}"></label>
+    <label class="field"><span>Contraseña</span><input type="password" name="password" minlength="8" autocomplete="new-password" required></label>
+    <label class="field"><span>Repite la contraseña</span><input type="password" name="confirmarPassword" minlength="8" autocomplete="new-password" required></label>
+    <button class="btn btn-primary btn-block" type="submit">Crear cuenta</button>
+  </form>
+  <p class="center" style="margin-top:16px">¿Ya tienes cuenta? <a th:href="@{/login}" style="color:var(--ember)">Inicia sesión</a></p>
+</main>
+<footer th:replace="~{fragments/ui :: sitefoot}"></footer>
+</body>
+</html>

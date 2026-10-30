@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<!-- Componentes reutilizables · tema oscuro, escritorio primero -->
+<head th:fragment="head(titulo)">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#14110f">
+  <title th:text="${titulo} + ' · Mandale Carbón'">Mandale Carbón</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap">
+  <link rel="stylesheet" th:href="@{/css/wireframe.css}">
+  <script>
+    (function () {
+      const saved = localStorage.getItem('mandale-carbon-theme');
+      document.documentElement.dataset.theme = saved === 'light' ? 'light' : 'dark';
+      window.toggleMcTheme = function () {
+        const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+        document.documentElement.dataset.theme = next;
+        localStorage.setItem('mandale-carbon-theme', next);
+        document.querySelectorAll('[data-theme-label]').forEach(el => el.textContent = next === 'dark' ? 'Modo claro' : 'Modo nocturno');
+        document.querySelectorAll('[data-theme-icon]').forEach(el => el.textContent = next === 'dark' ? '☀' : '☾');
+      };
+      document.addEventListener('DOMContentLoaded', function () {
+        const light = document.documentElement.dataset.theme === 'light';
+        document.querySelectorAll('[data-theme-label]').forEach(el => el.textContent = light ? 'Modo nocturno' : 'Modo claro');
+        document.querySelectorAll('[data-theme-icon]').forEach(el => el.textContent = light ? '☾' : '☀');
+      });
+    })();
+  </script>
+</head>
+<body>
+
+<!-- Cliente: cabecera del sitio. En celular la navegación pasa a la barra inferior -->
+<header class="sitehead" th:fragment="sitehead(activo)">
+  <div class="in">
+    <a class="logo" th:href="@{/}">Mandale Carbón</a>
+    <nav class="sitenav" aria-label="Principal">
+      <a th:href="@{/}" th:classappend="${activo == 'Inicio'} ? 'on'">Inicio</a>
+      <a th:href="@{/carta}" th:classappend="${activo == 'Carta'} ? 'on'">Carta</a>
+      <a th:href="@{/reservas}" th:classappend="${activo == 'Reservas'} ? 'on'">Reservas</a>
+      <a th:href="@{/cuenta/pedidos}" th:classappend="${activo == 'Pedidos'} ? 'on'">Pedidos</a>
+      <a th:href="@{/cuenta}" th:classappend="${activo == 'Cuenta'} ? 'on'">Cuenta</a>
+    </nav>
+    <button class="btn btn-sm theme-toggle" type="button" onclick="toggleMcTheme()" aria-label="Cambiar tema"><span data-theme-icon>☀</span><span data-theme-label>Modo claro</span></button>
+    <a class="btn btn-primary btn-sm cartbtn" th:href="@{/carrito}">Carrito <span class="badge" style="background:#1a0d06;color:var(--ember)" th:text="${carritoCantidad}">0</span></a>
+  </div>
+</header>
+
+<footer class="sitefoot" th:fragment="sitefoot">
+  <div class="in">
+    <div><a class="logo" th:href="@{/}">Mandale Carbón</a><p class="muted" style="margin-top:8px">Parrillas al carbón en Chiclayo.</p></div>
+    <div><h3>Local</h3><small>Av. Balta 1240, Chiclayo<br>Todos los días · 12:00 a 11:00 p. m.</small></div>
+    <div><h3>Contacto</h3><small>987 654 321<br>hola@mandalecarbon.pe</small><br><small><a th:href="@{/acceso}" style="text-decoration:underline">Acceso del personal</a></small></div>
+  </div>
+</footer>
+
+<!-- Cliente: pasos del pedido (n = paso actual de 1 a 7) -->
+<ol class="pasos" th:fragment="pasos(n)">
+  <li th:each="s, st : ${ {'Carrito','Modalidad','Identificación','Entrega','Pago','Revisión','Listo'} }"
+      th:text="${st.count} + '. ' + ${s}"
+      th:classappend="${st.count lt n} ? 'done' : (${st.count == n} ? 'now' : '')">Paso</li>
+</ol>
+
+<!-- Resumen lateral del pedido (carrito y checkout) -->
+<aside class="panel stack-sm" th:fragment="resumenPedido">
+  <h2>Tu pedido</h2>
+  <div class="row" th:each="linea : ${lineas}"><div class="ph sm"></div><div class="grow"><strong th:text="${linea.nombre() + ' × ' + linea.cantidad()}">Producto</strong></div><span th:text="${linea.subtotal()}">S/ 0.00</span></div>
+  <hr>
+  <div class="item-total"><span class="muted">Subtotal</span><span th:text="${total}">S/ 0.00</span></div>
+  <div class="item-total total"><span>Total</span><span th:text="${total}">S/ 0.00</span></div>
+</aside>
+
+<!-- Paneles: barra lateral. Usa "portal" y "menu" del controlador -->
+<aside class="side" th:fragment="sidebar(activo)">
+  <a class="logo" th:href="@{/}">Mandale Carbón</a>
+  <button class="btn btn-sm theme-toggle" type="button" onclick="toggleMcTheme()" aria-label="Cambiar tema"><span data-theme-icon>☀</span><span data-theme-label>Modo claro</span></button>
+  <small class="muted" th:text="${portal}">PORTAL</small>
+  <nav>
+    <a th:each="m : ${menu}" th:href="@{${m.url()}}" th:text="${m.etiqueta()}"
+       th:classappend="${m.etiqueta() == activo} ? 'on'">Opción</a>
+    <a class="salir" th:href="@{/salir}">Salir</a>
+  </nav>
+  <div class="turno"><small th:text="${session.rolEtiqueta} ?: 'Turno actual'">Turno actual</small><br>
+    <strong th:text="${session.nombre} ?: 'Usuario del sistema'">Usuario del sistema</strong>
+    <div class="stack-sm" style="margin-top:10px"><a class="btn btn-sm btn-block" th:href="@{/}">Ver sitio del cliente</a><a class="btn btn-sm btn-block" th:href="@{/salir}">Cerrar sesión</a></div></div>
+</aside>
+
+<!-- Estado operativo y estado de pago: SIEMPRE independientes -->
+<div class="estados" th:fragment="estados(op,pago)">
+  <div class="estado"><small>Estado operativo</small>
+    <span class="pill" th:classappend="'tono-' + ${@tono.de(op)}" th:text="${op}">En camino</span></div>
+  <div class="estado"><small>Estado de pago</small>
+    <span class="pill" th:classappend="'tono-' + ${@tono.de(pago)}" th:text="${pago}">Pagado</span></div>
+</div>
+
+<!-- Tarjeta de plato -->
+<article class="plato" th:fragment="platoCard(p)">
+  <a th:if="${p.estado() == 'DISPONIBLE'}" th:href="@{/producto/{id}(id=${p.id()})}" style="color:inherit;text-decoration:none">
+    <div class="ph"><span>Foto</span></div>
+    <div class="plato-body">
+      <strong th:text="${p.nombre()}">Plato</strong>
+      <small th:text="${p.detalle()}">Detalle</small>
+      <span class="precio" th:text="${p.precio()}">S/ 0.00</span>
+    </div>
+  </a>
+  <div th:unless="${p.estado() == 'DISPONIBLE'}">
+    <div class="ph"><span>Foto</span></div>
+    <div class="plato-body"><strong th:text="${p.nombre()}">Plato</strong><small th:text="${p.detalle()}">Detalle</small><span class="precio" th:text="${p.precio()}">S/ 0.00</span><small>No disponible</small></div>
+  </div>
+  <form th:if="${p.estado() == 'DISPONIBLE'}" method="post" th:action="@{/carrito/agregar}" style="padding:0 16px 16px">
+    <input type="hidden" name="productoId" th:value="${p.id()}">
+    <input type="hidden" name="cantidad" value="1">
+    <button class="btn btn-sm btn-primary btn-block" type="submit">Agregar al carrito</button>
+  </form>
+</article>
+
+<!-- Indicadores -->
+<div th:fragment="kpis(lista,columnas)" th:class="'grid-' + ${columnas}">
+  <div class="kpi" th:each="k : ${lista}">
+    <small th:text="${k.etiqueta()}">Etiqueta</small>
+    <strong th:text="${k.valor()}">0</strong>
+    <small th:text="${k.nota()}">nota</small>
+  </div>
+</div>
+
+<!-- Tabla genérica: los textos que son estados se pintan como píldoras de color -->
+<table class="tabla" th:fragment="tabla(cabeceras,filas)">
+  <thead><tr><th th:each="c : ${cabeceras}" th:text="${c}">Columna</th></tr></thead>
+  <tbody>
+    <tr th:each="f : ${filas}">
+      <td th:each="c : ${f.celdas()}">
+        <span th:if="${@tono.de(c) != ''}" class="pill" th:classappend="'tono-' + ${@tono.de(c)}" th:text="${c}">Estado</span>
+        <th:block th:unless="${@tono.de(c) != ''}" th:text="${c}">dato</th:block>
+      </td>
+      <td th:if="${f.accion() != null}">
+        <a th:if="${f.url() != null}" th:href="@{${f.url()}}" th:text="${f.accion()}">Acción</a>
+        <span th:if="${f.url() == null}" th:text="${f.accion()}">Acción</span>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Campo de formulario -->
+<label class="field" th:fragment="campo(etiqueta,valor)">
+  <span th:text="${etiqueta}">Etiqueta</span>
+  <input type="text" th:value="${valor}">
+</label>
+
+</body>
+</html>

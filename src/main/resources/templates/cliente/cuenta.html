@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Mi cuenta')}"></head>
+<body>
+<header th:replace="~{fragments/ui :: sitehead('Cuenta')}"></header>
+<main class="container ">
+  <div class="pagehead"><h1>Mi cuenta</h1></div>
+  <div class="panel stack" th:if="${clienteId != null}">
+    <h2 th:text="|Hola, ${clienteNombre}|">Hola</h2>
+    <p class="muted" th:text="${clienteCorreo}">correo@ejemplo.com</p>
+    <div class="row"><a class="btn btn-primary" th:href="@{/cuenta/pedidos}">Ver mis pedidos</a><a class="btn" th:href="@{/carta}">Ver la carta</a></div>
+    <form method="post" th:action="@{/salir-cliente}"><button class="btn" type="submit">Cerrar sesión</button></form>
+  </div>
+  <div class="panel stack" th:if="${clienteId == null}">
+    <h2>Estás navegando como invitado</h2>
+    <p class="muted">Puedes pedir sin registrarte o crear una cuenta para consultar tus pedidos asociados.</p>
+    <div class="row"><a class="btn btn-primary" th:href="@{/registro}">Crear cuenta</a><a class="btn" th:href="@{/login}">Iniciar sesión</a><a class="btn" th:href="@{/carta}">Ver la carta</a></div>
+  </div>
+</main>
+<footer th:replace="~{fragments/ui :: sitefoot}"></footer>
+</body>
+</html>

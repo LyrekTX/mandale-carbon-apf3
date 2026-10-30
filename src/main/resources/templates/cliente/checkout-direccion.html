@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Dirección de entrega')}"></head>
+<body>
+<header th:replace="~{fragments/ui :: sitehead('Carta')}"></header>
+<main class="container ">
+  <ol th:replace="~{fragments/ui :: pasos(4)}"></ol>
+  <div class="pagehead"><h1>Dirección de entrega</h1></div>
+  <div class="split">
+    <form class="stack" method="post" th:action="@{/checkout/entrega/guardar}">
+      <p class="note" th:if="${errorEntrega != null}" th:text="${errorEntrega}"></p>
+      <label class="field"><span>Dirección</span><input name="direccion" type="text" maxlength="250" placeholder="Ingresa tu dirección" required></label>
+      <div class="grid-2"><label class="field"><span>Distrito</span><input name="distrito" type="text" maxlength="80" placeholder="Chiclayo" required></label><label class="field"><span>Referencia</span><input name="referencia" type="text" maxlength="200" placeholder="Casa, edificio o referencia"></label></div>
+      <div class="note">Continúa como invitado. Tus datos de contacto se pedirán al confirmar.</div>
+      <button class="btn btn-primary" type="submit">Guardar y continuar</button>
+    </form>
+    <aside th:replace="~{fragments/ui :: resumenPedido}"></aside>
+  </div>
+</main>
+<footer th:replace="~{fragments/ui :: sitefoot}"></footer>
+</body>
+</html>

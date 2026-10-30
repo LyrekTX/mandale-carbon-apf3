@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Detalle del producto')}"></head>
+<body>
+<header th:replace="~{fragments/ui :: sitehead('Carta')}"></header>
+<main class="container nohead">
+  <div class="split">
+    <div class="ph" style="height:440px"><span>Foto del plato</span></div>
+    <aside class="stack">
+      <a class="muted" th:href="@{/carta}">‹ Volver a la carta</a>
+      <h1 th:text="${plato.nombre()}">Parrilla clásica</h1>
+      <span class="precio" style="font-size:34px" th:text="${plato.precio()}">S/ 34.90</span>
+      <p class="muted" th:text="${plato.detalle()}">Carne, pollo y chorizo.</p>
+      <form class="stack" method="post" th:action="@{/carrito/agregar}">
+        <input type="hidden" name="productoId" th:value="${plato.id()}">
+        <label class="field"><span>Término de la carne</span>
+          <select name="termino">
+            <option value="">Sin especificar</option>
+            <option value="Medio">Medio</option>
+            <option value="3/4">3/4</option>
+            <option value="Bien cocido">Bien cocido</option>
+          </select>
+        </label>
+        <label class="field"><span>Nota para cocina (opcional)</span><textarea name="nota" maxlength="250" placeholder="Ej.: sin cebolla, por favor"></textarea></label>
+        <div class="row">
+        <label class="field"><span>Cantidad</span><input name="cantidad" type="number" min="1" max="50" value="1" required style="width:90px"></label>
+        <button class="btn btn-primary grow" type="submit" th:text="'Agregar · ' + ${plato.precio()}">Agregar</button>
+        </div>
+      </form>
+    </aside>
+  </div>
+</main>
+<footer th:replace="~{fragments/ui :: sitefoot}"></footer>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Resumen de caja')}" ></head>
+<body>
+<div class="shell">
+  <aside th:replace="~{fragments/ui :: sidebar('Cierre de caja')}"></aside>
+  <section>
+    <header class="topbar"><h1>Resumen de caja</h1><a class="btn btn-sm" th:href="@{/cajero}">Volver a cobros</a></header>
+    <main class="content">
+      <div th:replace="~{fragments/ui :: kpis(${kpis},4)}"></div>
+      <div class="panel stack">
+        <h2>Ventas registradas por medio de pago</h2>
+        <p class="muted">Totales calculados con los cobros registrados hoy en la base de datos. Este resumen no simula conteo físico de efectivo.</p>
+        <table th:replace="~{fragments/ui :: tabla(${cabeceras},${filas})}"></table>
+      </div>
+    </main>
+  </section>
+</div>
+</body>
+</html>

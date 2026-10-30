@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Reserva registrada')}"></head>
+<body>
+<header th:replace="~{fragments/ui :: sitehead('Reservas')}"></header>
+<main class="container narrow nohead">
+  <div class="stack center"><div class="check">✓</div><h1>Solicitud de reserva enviada</h1></div>
+  <div class="stack" style="margin-top:22px">
+    <div class="panel stack-sm"><h2 th:text="${'Reserva ' + reserva.codigo()}">Reserva</h2><small th:text="${reserva.fechaHora() + ' · ' + reserva.personas() + ' personas · ' + reserva.cliente()}">Datos de la reserva</small><small th:text="${'Estado: ' + reserva.estado()}">Pendiente</small></div>
+    <div class="note">La solicitud se guardó y queda pendiente de confirmación del local.</div>
+    <div class="grid-2"><a class="btn btn-primary" th:href="@{/reservas}">Hacer otra reserva</a><a class="btn" th:href="@{/}">Volver al inicio</a></div>
+  </div>
+</main>
+<footer th:replace="~{fragments/ui :: sitefoot}"></footer>
+</body>
+</html>

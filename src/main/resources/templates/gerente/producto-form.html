@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Producto')}"></head>
+<body>
+<div class="shell">
+  <aside th:replace="~{fragments/ui :: sidebar('Productos')}"></aside>
+  <section>
+    <header class="topbar"><h1 th:text="${modo}">Producto</h1><a class="btn btn-sm" th:href="@{/gerente/productos}">‹ Volver a productos</a></header>
+    <main class="content">
+      <form class="two-col" method="post" th:action="@{/gerente/productos/guardar}" th:object="${producto}">
+        <input type="hidden" th:field="*{id}">
+        <div class="stack">
+          <div class="panel stack">
+            <h2>Datos del producto</h2>
+            <div class="grid-2">
+              <label class="field"><span>Nombre</span><input type="text" th:field="*{nombre}" maxlength="80" required placeholder="Ej. Parrilla clásica"><small th:errors="*{nombre}"></small></label>
+              <label class="field"><span>Categoría</span><select name="categoriaId" required><option value="">Seleccionar</option><option th:each="c : ${categorias}" th:value="${c.id}" th:text="${c.nombre}" th:selected="${producto.categoria != null and producto.categoria.id == c.id}">Parrillas</option></select></label>
+              <label class="field"><span>Precio (S/)</span><input type="number" th:field="*{precio}" min="0" step="0.01" required><small th:errors="*{precio}"></small></label>
+              <label class="field"><span>Stock disponible</span><input type="number" th:field="*{stock}" min="0" required><small th:errors="*{stock}"></small></label>
+            </div>
+            <label class="field"><span>Descripción</span><textarea th:field="*{descripcion}" maxlength="250"></textarea><small th:errors="*{descripcion}"></small></label>
+          </div>
+          <div class="note">La disponibilidad del producto se controla en catálogo; el inventario avanzado queda fuera del alcance de este avance.</div>
+        </div>
+        <aside class="stack">
+          <div class="panel stack"><h2>Foto</h2><div class="ph lg txt">FOTO DEL PRODUCTO</div></div>
+          <div class="panel stack"><h2>Disponibilidad</h2>
+            <label class="field"><span>Estado</span><select th:field="*{estado}"><option value="DISPONIBLE">Disponible</option><option value="AGOTADO">Agotado</option><option value="PAUSADO">Pausado</option></select></label>
+          </div>
+          <button class="btn btn-primary btn-block" type="submit">Guardar producto</button>
+          <a class="btn btn-block" th:href="@{/gerente/productos}">Cancelar</a>
+        </aside>
+      </form>
+    </main>
+  </section>
+</div>
+</body>
+</html>

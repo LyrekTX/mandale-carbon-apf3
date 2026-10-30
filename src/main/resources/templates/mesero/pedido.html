@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Detalle del pedido')}"></head>
+<body>
+<div class="shell">
+  <aside th:replace="~{fragments/ui :: sidebar('Pedidos recientes')}"></aside>
+  <section>
+    <header class="topbar"><h1 th:text="'Pedido #' + ${pedido.codigo()}">Pedido</h1><span class="row"><button class="btn btn-sm" type="button" onclick="window.print()">Imprimir</button><a class="btn btn-sm" th:href="@{/mesero/pedidos}">Volver a pedidos</a></span></header>
+    <main class="content">
+      <div th:replace="~{fragments/ui :: estados(${pedido.estadoOp()},${pedido.estadoPago()})}"></div>
+      <div class="two-col">
+        <div class="panel stack">
+          <h2>Productos del pedido</h2>
+          <table class="tabla"><thead><tr><th>Producto</th><th>Cantidad</th><th>Subtotal</th><th>Nota</th></tr></thead>
+            <tbody>
+              <tr th:each="item : ${items}"><td th:text="${item.nombre()}">Producto</td><td th:text="${item.cantidad()}">1</td><td th:text="${item.subtotal()}">S/ 0.00</td><td th:text="${item.observacion() ?: '—'}">—</td></tr>
+              <tr th:if="${#lists.isEmpty(items)}"><td colspan="4">No hay productos en este pedido.</td></tr>
+            </tbody>
+          </table>
+          <div class="note" th:if="${observacion != null and !observacion.isBlank()}" th:text="${'Nota para cocina: ' + observacion}"></div>
+        </div>
+        <aside class="panel stack">
+          <h2>Datos del pedido</h2>
+          <div class="item-total"><span>Cliente</span><strong th:text="${pedido.cliente()}">Cliente</strong></div>
+          <div class="item-total"><span>Canal</span><span th:text="${pedido.canal()}">Delivery</span></div>
+          <div class="item-total"><span>Registrado</span><span th:text="${pedido.hora()}">Fecha</span></div>
+          <hr><div class="item-total total"><span>Total</span><span th:text="${pedido.total()}">S/ 0.00</span></div>
+          <p class="muted">La cocina actualiza el estado de preparación. El pago lo registra el cajero.</p>
+          <form th:if="${pedido.canal() == 'Salon' and pedido.estadoOp() == 'Listo para llevar'}" method="post" th:action="@{/mesero/pedidos/{codigo}/atendido(codigo=${pedido.codigo()})}"><button class="btn btn-primary btn-block" type="submit">Marcar atendido y liberar mesa</button></form>
+          <a class="btn btn-primary" th:href="@{/mesero/crear}">Crear otro pedido</a>
+        </aside>
+      </div>
+    </main>
+  </section>
+</div>
+</body>
+</html>

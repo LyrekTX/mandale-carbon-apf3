@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Formulario')}"></head>
+<body>
+<div class="shell">
+  <aside th:replace="~{fragments/ui :: sidebar(${activo})}"></aside>
+  <section>
+    <header class="topbar"><h1 th:text="${titulo}">Formulario</h1><a class="btn btn-sm" th:href="@{${volver}}">‹ Volver</a></header>
+    <main class="content">
+      <div class="note" th:if="${nota != null}" th:text="${nota}">Nota</div>
+      <div class="panel stack" th:if="${tipo != null}">
+        <p class="note" th:if="${error != null}" th:text="${error}"></p>
+        <form class="stack" method="post" th:action="@{/gerente/inventario/guardar}">
+          <input type="hidden" name="tipo" th:value="${tipo}">
+          <div class="grid-2">
+            <label class="field"><span>Nombre</span><input name="nombre" type="text" maxlength="100" required></label>
+            <label class="field"><span>Categoría</span><input name="categoria" type="text" maxlength="50" placeholder="Carnes, verduras, empaque..."></label>
+            <label class="field"><span>Unidad de medida</span><input name="unidad" type="text" maxlength="20" required th:value="${tipo == 'Insumo' ? 'un.' : 'kg'}"></label>
+            <label class="field"><span>Stock inicial</span><input name="stock" type="number" min="0" step="0.001" value="0" required></label>
+            <label class="field"><span>Stock mínimo (alerta)</span><input name="stockMinimo" type="number" min="0" step="0.001" value="0" required></label>
+            <label class="field"><span>Proveedor</span><input name="proveedor" type="text" maxlength="120"></label>
+          </div>
+          <div class="row"><button class="btn btn-primary" type="submit">Guardar</button><a class="btn" th:href="@{${volver}}">Cancelar</a></div>
+        </form>
+      </div>
+      <div class="panel stack" th:unless="${tipo != null}">
+        <div class="grid-2"><label class="field" th:each="c : ${campos}"><span th:text="${c.etiqueta()}">Campo</span><input type="text" th:value="${c.valor()}"></label></div>
+        <div class="row"><a class="btn btn-primary" th:href="@{${volver}}">Guardar</a><a class="btn" th:href="@{${volver}}">Cancelar</a></div>
+        <small>Prototipo: el botón Guardar solo navega; todavía no guarda datos.</small>
+      </div>
+    </main>
+  </section>
+</div>
+</body>
+</html>

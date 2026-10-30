@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Reservar una mesa')}"></head>
+<body>
+<header th:replace="~{fragments/ui :: sitehead('Reservas')}"></header>
+<main class="container ">
+  <div class="pagehead"><h1>Reservar una mesa</h1></div>
+  <div class="split">
+    <form class="stack" method="post" th:action="@{/reservas}">
+      <p class="note" th:if="${errorReserva != null}" th:text="${errorReserva}"></p>
+      <div class="grid-2">
+        <label class="field"><span>Fecha</span><input type="date" name="fecha" th:min="${fechaMinima}" required></label>
+        <label class="field"><span>Hora</span><input type="time" name="hora" min="12:00" max="22:00" required></label>
+      </div>
+      <div class="grid-2">
+        <label class="field"><span>Personas</span><input type="number" name="personas" min="1" max="20" value="2" required></label>
+        <label class="field"><span>Nombre</span><input type="text" name="nombre" maxlength="120" required></label>
+      </div>
+      <label class="field"><span>Teléfono (opcional)</span><input type="tel" name="telefono" maxlength="20"></label>
+      <label class="field"><span>Nota (opcional)</span><textarea name="nota" maxlength="250" placeholder="Indicaciones especiales"></textarea></label>
+      <button class="btn btn-primary" type="submit">Solicitar reserva</button>
+    </form>
+    <aside class="panel stack-sm"><h2>Antes de reservar</h2><small>Av. Balta 1240, Chiclayo<br>Todos los días · 12:00 a 11:00 p. m.</small>
+      <div class="note">Mantenemos la mesa durante 15 minutos.</div></aside>
+  </div>
+</main>
+<footer th:replace="~{fragments/ui :: sitefoot}"></footer>
+</body>
+</html>

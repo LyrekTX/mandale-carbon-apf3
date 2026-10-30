@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Entregas')}" ></head>
+<body>
+<div class="shell courier">
+  <aside th:replace="~{fragments/ui :: sidebar(${menuActivo})}"></aside>
+  <section>
+    <header class="topbar"><h1 th:text="${tabActiva == 'Disponibles' ? 'Entregas disponibles' : tabActiva == 'Activas' ? 'Mis entregas' : 'Historial de entregas'}">Entregas</h1><a class="btn btn-sm" th:href="@{/repartidor(tab=${tabActiva})}">Actualizar</a></header>
+    <main class="content">
+      <div class="grid-3">
+        <a class="kpi card" th:href="@{/repartidor(tab='Disponibles')}"><small>Disponibles</small><strong th:text="${disponibles}">0</strong></a>
+        <a class="kpi card" th:href="@{/repartidor(tab='Activas')}"><small>Mis entregas activas</small><strong th:text="${activas}">0</strong></a>
+        <a class="kpi card" th:href="@{/repartidor(tab='Historial')}"><small>Entregadas</small><strong th:text="${entregadas}">0</strong></a>
+      </div>
+      <div class="chips">
+        <a class="chip" th:href="@{/repartidor(tab='Disponibles')}" th:classappend="${tabActiva == 'Disponibles'} ? 'on'">Disponibles</a>
+        <a class="chip" th:href="@{/repartidor(tab='Activas')}" th:classappend="${tabActiva == 'Activas'} ? 'on'">Mis entregas</a>
+        <a class="chip" th:href="@{/repartidor(tab='Historial')}" th:classappend="${tabActiva == 'Historial'} ? 'on'">Historial</a>
+      </div>
+      <p class="note" th:if="${errorEntrega != null}" th:text="${errorEntrega}"></p>
+      <p class="muted" th:if="${#lists.isEmpty(entregas)}" th:text="${sinResultados}">No hay entregas.</p>
+      <div class="grid-2" th:unless="${#lists.isEmpty(entregas)}">
+        <article class="panel stack" th:each="e : ${entregas}">
+          <div class="between"><h2 th:text="${e.codigo()}">MC-0001</h2><span class="tag" th:text="${e.hora()}">Fecha</span></div>
+          <strong th:text="${e.cliente()}">Cliente</strong>
+          <small th:text="${e.direccion() ?: 'El pedido no tiene dirección registrada.'}">Dirección</small>
+          <div th:replace="~{fragments/ui :: estados(${e.estadoOp()},${e.estadoPago()})}"></div>
+          <p><strong th:text="${e.total()}">S/ 0.00</strong> · <span th:text="${e.estadoEntrega()}">Pendiente</span></p>
+          <div class="row"><a class="btn grow" th:href="@{/repartidor/entrega/{codigo}(codigo=${e.codigo()})}">Ver detalle</a>
+            <form th:if="${esRepartidor and e.estadoEntrega() == 'Pendiente'}" method="post" th:action="@{/repartidor/entrega/{codigo}/tomar(codigo=${e.codigo()})}"><button class="btn btn-primary" type="submit">Tomar</button></form>
+            <form th:if="${esRepartidor and e.estadoEntrega() == 'Asignada'}" method="post" th:action="@{/repartidor/entrega/{codigo}/iniciar(codigo=${e.codigo()})}"><button class="btn btn-primary" type="submit">Iniciar ruta</button></form>
+            <form th:if="${esRepartidor and e.estadoEntrega() == 'En camino'}" method="post" th:action="@{/repartidor/entrega/{codigo}/completar(codigo=${e.codigo()})}"><button class="btn btn-primary" type="submit">Entregada</button></form>
+          </div>
+        </article>
+      </div>
+    </main>
+  </section>
+</div>
+</body>
+</html>

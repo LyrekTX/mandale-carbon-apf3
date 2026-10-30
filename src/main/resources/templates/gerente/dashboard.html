@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Dashboard')}"></head>
+<body>
+<div class="shell">
+  <aside th:replace="~{fragments/ui :: sidebar('Dashboard')}"></aside>
+  <section>
+    <header class="topbar"><h1>Dashboard</h1><span class="row"><small>Hoy · 02 oct 2026</small><a class="btn btn-sm" th:href="@{/gerente/inventario/nuevo}">+ Ingrediente</a><a class="btn btn-sm btn-primary" th:href="@{/gerente/productos/nuevo}">+ Producto</a></span></header>
+    <main class="content">
+      <div th:replace="~{fragments/ui :: kpis(${kpis},4)}"></div>
+      <div class="two-col">
+        <div class="panel stack"><h2>Ventas de los últimos 7 días</h2><div class="bars" role="img" aria-label="Ventas de los últimos 7 días">
+            <div th:each="b, st : ${barras}" th:classappend="${st.last} ? 'hoy'"><span th:text="${b.monto()}">S/ 0</span><i th:style="'height:' + ${b.pct()} + '%'"></i><span th:text="${b.dia()}">Día</span></div>
+          </div>
+          <table th:replace="~{fragments/ui :: tabla(${cabeceras},${filas})}"></table></div>
+        <aside class="panel stack-sm"><h2>Alertas de inventario</h2>
+          <div class="alerta" th:each="a : ${alertas}" th:text="${a}">Alerta</div></aside>
+      </div>
+    </main>
+  </section>
+</div>
+</body>
+</html>

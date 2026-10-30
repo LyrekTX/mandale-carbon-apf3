@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Cobros')}" ></head>
+<body>
+<div class="shell">
+  <aside th:replace="~{fragments/ui :: sidebar(${activoCajero})}"></aside>
+  <section>
+    <header class="topbar"><h1>Cobros</h1><a class="btn btn-primary" th:href="@{/cajero?estado=Pendiente}">Ver pendientes</a></header>
+    <main class="content">
+      <div th:replace="~{fragments/ui :: kpis(${kpis},4)}"></div>
+      <div class="chips">
+        <a class="chip" th:href="@{/cajero}">Todos</a>
+        <a class="chip" th:href="@{/cajero(estado='Pendiente')}">Pendientes</a>
+        <a class="chip" th:href="@{/cajero(estado='Pagado')}">Pagados / comprobantes</a>
+      </div>
+      <form class="toolbar" method="get" th:action="@{/cajero}">
+        <label class="field"><span>Buscar pedido o cliente</span><input name="q" th:value="${q}" placeholder="MC-0001 o nombre"></label>
+        <label class="field"><span>Estado de pago</span><select name="estado"><option value="">Todos</option><option value="Pendiente" th:selected="${estadoFiltro == 'Pendiente'}">Pendiente</option><option value="Pagado" th:selected="${estadoFiltro == 'Pagado'}">Pagado</option><option value="Por validar" th:selected="${estadoFiltro == 'Por validar'}">Por validar</option></select></label>
+        <button class="btn" type="submit">Filtrar</button>
+      </form>
+      <p class="muted" th:if="${ayuda != null}" th:text="${ayuda}"></p>
+      <table th:replace="~{fragments/ui :: tabla(${cabeceras},${filas})}"></table>
+    </main>
+  </section>
+</div>
+</body>
+</html>

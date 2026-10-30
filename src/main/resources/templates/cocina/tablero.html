@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Tablero de comandas')}"></head>
+<body>
+<script>setTimeout(() => window.location.reload(), 30000);</script>
+<div class="shell">
+  <aside th:replace="~{fragments/ui :: sidebar(${tabCocina})}"></aside>
+  <section>
+    <header class="topbar"><h1>Tablero de comandas</h1><span class="row"><span class="tag">Autoactualización: 30 s</span><a class="btn btn-sm" th:href="@{/cocina(estado=${estadoFiltro})}">Actualizar</a></span></header>
+    <main class="content">
+      <div class="chips">
+        <a class="chip" th:href="@{/cocina}" th:classappend="${estadoFiltro == ''} ? 'on'">Todas</a>
+        <a class="chip" th:href="@{/cocina(estado='Por aceptar')}" th:classappend="${estadoFiltro == 'Por aceptar'} ? 'on'">Por aceptar</a>
+        <a class="chip" th:href="@{/cocina(estado='En preparación')}" th:classappend="${estadoFiltro == 'En preparación'} ? 'on'">En preparación</a>
+        <a class="chip" th:href="@{/cocina(estado='Listos')}" th:classappend="${estadoFiltro == 'Listos'} ? 'on'">Listos</a>
+        <a class="chip" th:href="@{/cocina/historial}">Historial</a>
+      </div>
+      <div class="kanban">
+        <section class="columna" th:each="col : ${columnas}">
+          <h2><span th:text="${col.titulo()}">Estado</span><span class="tag dark" th:text="${#lists.size(col.comandas())}">0</span></h2>
+          <div class="card stack-sm" th:each="c : ${col.comandas()}">
+            <div class="between"><strong th:text="'#' + ${c.codigo()}">#MC-1048</strong><span class="tag" th:text="${c.tiempo()}">18 min</span></div>
+            <small th:text="${c.origen()}">Origen</small>
+            <div th:each="i : ${c.items()}" th:text="${i}">1 × Plato</div>
+            <a class="btn btn-gray" th:href="@{/cocina/comanda/{c}(c=${c.codigo()})}">Abrir comanda</a>
+          </div>
+        </section>
+      </div>
+    </main>
+  </section>
+</div>
+</body>
+</html>

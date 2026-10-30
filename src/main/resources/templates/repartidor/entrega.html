@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Detalle de entrega')}"></head>
+<body>
+<div class="shell courier">
+  <aside th:replace="~{fragments/ui :: sidebar('Mis entregas')}"></aside>
+  <section>
+    <header class="topbar"><h1 th:text="${'Entrega ' + entrega.codigo()}">Entrega</h1><a class="btn btn-sm" th:href="@{/repartidor(tab=${entrega.asignadaAMi() ? 'Activas' : 'Disponibles'})}">Volver a entregas</a></header>
+    <main class="content">
+      <p class="note" th:if="${errorEntrega != null}" th:text="${errorEntrega}"></p>
+      <div th:replace="~{fragments/ui :: estados(${entrega.estadoOp()},${entrega.estadoPago()})}"></div>
+      <div class="two-col">
+        <div class="panel stack">
+          <h2>Pedido</h2>
+          <div class="item-total"><span>Cliente</span><strong th:text="${entrega.cliente()}">Cliente</strong></div>
+          <div class="item-total"><span>Teléfono</span><a th:if="${!#strings.isEmpty(telefonoLimpio)}" th:href="|tel:${telefonoLimpio}|" th:text="${entrega.telefono()}">Teléfono</a><span th:if="${#strings.isEmpty(telefonoLimpio)}">No registrado</span></div>
+          <div class="item-total"><span>Registrado</span><span th:text="${entrega.hora()}">Fecha</span></div>
+          <hr><h3>Productos</h3>
+          <ul><li th:each="item : ${entrega.items()}" th:text="${item}">1 × Producto</li></ul>
+          <div class="item-total total"><span>Total del pedido</span><span th:text="${entrega.total()}">S/ 0.00</span></div>
+          <p class="note" th:text="${entrega.estadoPago() == 'Pagado' ? 'Pago registrado. No cobrar al entregar.' : 'Pago pendiente. Confirma el pago con el cajero antes de salir; no cobres desde esta pantalla.'}">Pago</p>
+        </div>
+        <aside class="stack">
+          <div class="panel stack-sm">
+            <h2>Dirección de entrega</h2>
+            <strong th:text="${entrega.direccion() ?: 'No hay dirección registrada para este pedido.'}">Dirección</strong>
+            <small th:if="${entrega.referencia() != null and !entrega.referencia().isBlank()}" th:text="${'Referencia: ' + entrega.referencia()}">Referencia</small>
+            <a class="btn btn-block" th:if="${entrega.direccion() != null and !entrega.direccion().isBlank()}" th:href="${mapaUrl}" target="_blank" rel="noopener">Abrir ruta en Maps</a>
+          </div>
+          <form th:if="${esRepartidor and entrega.estadoEntrega() == 'Pendiente' and !entrega.asignadaAMi()}" method="post" th:action="@{/repartidor/entrega/{codigo}/tomar(codigo=${entrega.codigo()})}"><button class="btn btn-primary btn-block" type="submit">Tomar esta entrega</button></form>
+          <form th:if="${esRepartidor and entrega.estadoEntrega() == 'Asignada' and entrega.asignadaAMi()}" method="post" th:action="@{/repartidor/entrega/{codigo}/iniciar(codigo=${entrega.codigo()})}"><button class="btn btn-primary btn-block" type="submit">Iniciar recorrido</button></form>
+          <form th:if="${esRepartidor and entrega.estadoEntrega() == 'En camino' and entrega.asignadaAMi()}" method="post" th:action="@{/repartidor/entrega/{codigo}/completar(codigo=${entrega.codigo()})}"><button class="btn btn-primary btn-block" type="submit">Confirmar entrega completada</button></form>
+          <div class="panel" th:if="${entrega.estadoEntrega() == 'Entregada'}">Entrega completada.</div>
+        </aside>
+      </div>
+    </main>
+  </section>
+</div>
+</body>
+</html>

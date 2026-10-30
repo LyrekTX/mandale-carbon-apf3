@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Tu carrito')}"></head>
+<body>
+<header th:replace="~{fragments/ui :: sitehead('Carta')}"></header>
+<main class="container ">
+  <ol th:replace="~{fragments/ui :: pasos(1)}"></ol>
+  <div class="pagehead"><h1>Tu carrito</h1></div>
+  <p class="note" th:if="${mensajeCarrito != null}" th:text="${mensajeCarrito}"></p>
+  <div class="panel stack" th:if="${#lists.isEmpty(lineas)}">
+    <p>Tu carrito está vacío.</p><a class="btn btn-primary" th:href="@{/carta}">Ver la carta</a>
+  </div>
+  <div class="split" th:unless="${#lists.isEmpty(lineas)}">
+    <div class="stack">
+      <div class="card stack" th:each="linea : ${lineas}">
+        <div class="between"><strong th:text="${linea.nombre()}">Producto</strong><span class="precio" th:text="${linea.subtotal()}">S/ 0.00</span></div>
+        <small th:text="'Precio unitario: ' + ${linea.precio()}">Precio</small>
+        <small th:if="${preferencias[linea.productoId()] != null and preferencias[linea.productoId()]['termino'] != null}"
+               th:text="'Término: ' + ${preferencias[linea.productoId()]['termino']}">Término</small>
+        <small th:if="${preferencias[linea.productoId()] != null and preferencias[linea.productoId()]['nota'] != null}"
+               th:text="'Nota: ' + ${preferencias[linea.productoId()]['nota']}">Nota</small>
+        <div class="row">
+          <form class="row" method="post" th:action="@{/carrito/actualizar}">
+            <input type="hidden" name="productoId" th:value="${linea.productoId()}">
+            <label class="field"><span>Cantidad</span><input name="cantidad" type="number" min="1" max="50" th:value="${linea.cantidad()}" required style="width:90px"></label>
+            <button class="btn btn-sm" type="submit">Actualizar</button>
+          </form>
+          <form method="post" th:action="@{/carrito/quitar}"><input type="hidden" name="productoId" th:value="${linea.productoId()}"><button class="btn btn-sm" type="submit">Quitar</button></form>
+        </div>
+      </div>
+      <a class="btn" th:href="@{/carta}">Seguir comprando</a>
+    </div>
+    <aside class="stack">
+      <div class="panel stack"><h2>Resumen</h2>
+        <div class="item-total"><span class="muted">Subtotal</span><span th:text="${total}">S/ 0.00</span></div>
+        <div class="item-total total"><span>Total</span><span th:text="${total}">S/ 0.00</span></div>
+        <a class="btn btn-primary btn-block" th:href="@{/checkout/modalidad}" th:text="'Continuar · ' + ${total}">Continuar</a></div>
+    </aside>
+  </div>
+</main>
+<footer th:replace="~{fragments/ui :: sitefoot}"></footer>
+</body>
+</html>

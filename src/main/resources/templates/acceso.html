@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Acceso del personal')}"></head>
+<body>
+<main class="container narrow" style="max-width:460px;padding-top:9vh">
+  <div class="stack">
+    <button class="btn btn-sm theme-toggle" type="button" onclick="toggleMcTheme()" aria-label="Cambiar tema"><span data-theme-icon>☀</span><span data-theme-label>Modo claro</span></button>
+    <a class="logo" th:href="@{/}" style="font-size:30px">Mandale Carbón</a>
+    <div><h1>Acceso del personal</h1><p class="muted">Meseros, cocina, cajeros y repartidores ingresan aquí con la cuenta que les creó el gerente. La aplicación abre automáticamente el panel de su rol.</p></div>
+    <form class="panel stack" method="post" th:action="@{/acceso}">
+      <p class="note" th:if="${error != null}" th:text="${error}"></p>
+      <label class="field"><span>Correo</span><input type="email" name="correo" required autocomplete="username"></label>
+      <label class="field"><span>Contraseña</span><input type="password" name="password" required autocomplete="current-password"></label>
+      <button class="btn btn-primary btn-block" type="submit">Ingresar al panel</button>
+      <div class="note">El acceso se valida contra las cuentas activas de la base de datos. El gerente puede abrir todos los paneles; los demás solo el suyo.</div>
+    </form>
+    <small class="center" style="display:block"><a th:href="@{/}" style="color:var(--ember)">‹ Volver al sitio del cliente</a></small>
+  </div>
+</main>
+</body>
+</html>

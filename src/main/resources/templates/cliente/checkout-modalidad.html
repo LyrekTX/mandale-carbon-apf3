@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('¿Cómo recibirás tu pedido?')}"></head>
+<body>
+<header th:replace="~{fragments/ui :: sitehead('Carta')}"></header>
+<main class="container ">
+  <ol th:replace="~{fragments/ui :: pasos(2)}"></ol>
+  <div class="pagehead"><h1>¿Cómo recibirás tu pedido?</h1></div>
+  <div class="split">
+    <form class="stack" method="get" th:action="@{/checkout/identificacion}">
+      <p class="muted">Elige una modalidad para calcular tiempos y costos.</p>
+      <label class="opt"><input type="radio" name="modalidad" value="delivery" checked><span><strong>Delivery</strong><br><small>Envío a tu dirección · 30-50 min · desde S/ 5</small></span></label>
+      <label class="opt"><input type="radio" name="modalidad" value="recojo"><span><strong>Recojo en local</strong><br><small>Av. Balta 1240, Chiclayo · 20-30 min</small></span></label>
+      <div class="note">El estado "En camino" solo se usa en pedidos con delivery.</div>
+      <button class="btn btn-primary" type="submit">Continuar</button>
+    </form>
+    <aside th:replace="~{fragments/ui :: resumenPedido}"></aside>
+  </div>
+</main>
+<footer th:replace="~{fragments/ui :: sitefoot}"></footer>
+</body>
+</html>

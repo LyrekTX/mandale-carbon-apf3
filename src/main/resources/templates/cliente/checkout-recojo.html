@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Datos para recojo')}"></head>
+<body>
+<header th:replace="~{fragments/ui :: sitehead('Carta')}"></header>
+<main class="container ">
+  <ol th:replace="~{fragments/ui :: pasos(4)}"></ol>
+  <div class="pagehead"><h1>Datos para recojo</h1></div>
+  <div class="split">
+    <form class="stack" method="post" th:action="@{/checkout/entrega/guardar}">
+      <input type="hidden" name="modalidad" value="recojo">
+      <div class="card"><strong>Local Mandale Carbón</strong><br><small>Av. Balta 1240, Chiclayo · Recojo estimado 7:25 p. m.</small></div>
+      <p class="muted">Confirma el nombre y teléfono de contacto en el último paso.</p>
+      <label class="field"><span>Indicaciones (opcional)</span><textarea name="referencia" maxlength="200" placeholder="Por ejemplo: recogeré en auto"></textarea></label>
+      <button class="btn btn-primary" type="submit">Continuar</button>
+    </form>
+    <aside th:replace="~{fragments/ui :: resumenPedido}"></aside>
+  </div>
+</main>
+<footer th:replace="~{fragments/ui :: sitefoot}"></footer>
+</body>
+</html>

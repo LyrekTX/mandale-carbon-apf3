@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Crear cuenta del personal')}"></head>
+<body>
+<div class="shell">
+  <aside th:replace="~{fragments/ui :: sidebar('Personal')}"></aside>
+  <section>
+    <header class="topbar"><h1>Nueva cuenta del personal</h1><a class="btn btn-sm" th:href="@{/gerente/personal}">‹ Volver</a></header>
+    <main class="content">
+      <p class="note" th:if="${error != null}" th:text="${error}"></p>
+      <form class="panel stack" method="post" th:action="@{/gerente/personal/guardar}">
+        <div class="grid-2">
+          <label class="field"><span>Nombre</span><input name="nombre" maxlength="80" required th:value="${nombre}"></label>
+          <label class="field"><span>Apellido</span><input name="apellido" maxlength="80" th:value="${apellido}"></label>
+          <label class="field"><span>Correo para iniciar sesión</span><input name="correo" type="email" maxlength="120" autocomplete="email" required th:value="${correo}"></label>
+          <label class="field"><span>Rol y panel</span><select name="rol" required><option value="">Selecciona un rol</option><option th:each="r : ${rolesEquipo}" th:value="${r.nombre}" th:text="${r.nombre}" th:selected="${rol == r.nombre}"></option></select></label>
+          <label class="field"><span>Contraseña inicial</span><input name="password" type="password" minlength="8" autocomplete="new-password" required></label>
+        </div>
+        <p class="muted">El colaborador entra desde “Acceso del personal”. Su rol determina si abre el panel de mesero, cocina, cajero o repartidor.</p>
+        <div class="row"><button class="btn btn-primary" type="submit">Crear cuenta</button><a class="btn" th:href="@{/gerente/personal}">Cancelar</a></div>
+      </form>
+    </main>
+  </section>
+</div>
+</body>
+</html>

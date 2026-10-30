@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Seguimiento del pedido')}"></head>
+<body>
+<header th:replace="~{fragments/ui :: sitehead('Pedidos')}"></header>
+<main class="container ">
+  <div class="pagehead"><h1>Seguimiento del pedido</h1></div>
+  <div class="split">
+    <div class="stack">
+      <div th:replace="~{fragments/ui :: estados(${pedido.estadoOp()},${pedido.estadoPago()})}"></div>
+      <div class="panel"><h2>Avance operativo</h2>
+        <small th:text="${'Pedido registrado: ' + pedido.hora()}">Fecha del pedido</small>
+        <ul class="progreso"><li th:each="estado,stat : ${estados}" th:text="${estado}" th:classappend="${stat.index < indiceEstado ? 'hecho' : (stat.index == indiceEstado ? 'actual' : 'falta')}">Estado</li></ul>
+      </div>
+    </div>
+    <aside class="stack">
+      <div class="panel stack-sm"><h2 th:text="${pedido.canal() == 'Recojo' ? 'Recojo en local' : 'Entrega a domicilio'}">Entrega</h2><small th:text="${pedido.canal() == 'Recojo' ? 'Av. Balta 1240, Chiclayo' : 'La dirección y coordinación se confirman con el local.'}">Información</small></div>
+      <small th:text="${'Pedido #' + pedido.codigo()}">Pedido</small>
+    </aside>
+  </div>
+</main>
+<footer th:replace="~{fragments/ui :: sitefoot}"></footer>
+</body>
+</html>

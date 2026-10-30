@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Carta')}"></head>
+<body>
+<header th:replace="~{fragments/ui :: sitehead('Carta')}"></header>
+<main class="container ">
+  <div class="pagehead"><h1>Carta</h1></div>
+  <div class="layout-aside">
+    <aside class="panel stack">
+      <h2>Filtrar</h2>
+      <form class="stack-sm" method="get" th:action="@{/carta}">
+        <label class="field"><span>Buscar producto</span><input type="search" name="q" th:value="${q}" placeholder="Nombre o descripción"></label>
+        <input th:if="${categoria != null}" type="hidden" name="categoria" th:value="${categoria}">
+        <input th:if="${rango != null}" type="hidden" name="rango" th:value="${rango}">
+        <label class="field"><span>Disponibilidad</span>
+          <select name="soloDisponibles"><option value="true" th:selected="${soloDisponibles}">Solo disponibles</option><option value="false" th:selected="${!soloDisponibles}">Mostrar todos</option></select>
+        </label>
+        <button class="btn btn-primary" type="submit">Buscar</button>
+      </form>
+      <div class="stack-sm"><strong>Categoría</strong><div class="chips">
+        <a class="chip" th:classappend="${categoria == null} ? 'on'" th:href="@{/carta(q=${q},rango=${rango},soloDisponibles=${soloDisponibles})}">Todas</a>
+        <a class="chip" th:each="cat : ${categorias}" th:text="${cat}" th:classappend="${cat == categoria} ? 'on'" th:href="@{/carta(categoria=${cat},q=${q},rango=${rango},soloDisponibles=${soloDisponibles})}">Categoría</a>
+      </div></div>
+      <div class="stack-sm"><strong>Precio</strong><div class="chips">
+        <a class="chip" th:classappend="${rango == 'hasta20'} ? 'on'" th:href="@{/carta(categoria=${categoria},q=${q},rango='hasta20',soloDisponibles=${soloDisponibles})}">Hasta S/ 20</a>
+        <a class="chip" th:classappend="${rango == '20a40'} ? 'on'" th:href="@{/carta(categoria=${categoria},q=${q},rango='20a40',soloDisponibles=${soloDisponibles})}">S/ 20–40</a>
+        <a class="chip" th:classappend="${rango == 'mas40'} ? 'on'" th:href="@{/carta(categoria=${categoria},q=${q},rango='mas40',soloDisponibles=${soloDisponibles})}">Más de S/ 40</a>
+        <a class="chip" th:classappend="${rango == null} ? 'on'" th:href="@{/carta(categoria=${categoria},q=${q},soloDisponibles=${soloDisponibles})}">Cualquier precio</a>
+      </div></div>
+    </aside>
+    <section class="stack">
+      <div class="between"><small th:text="${#lists.size(platos) + ' resultados'}">Resultados</small></div>
+      <div class="cards"><th:block th:each="p : ${platos}"><a th:replace="~{fragments/ui :: platoCard(${p})}"></a></th:block></div>
+      <div class="panel" th:if="${#lists.isEmpty(platos)}">No encontramos productos con esos filtros. Prueba otra búsqueda o categoría.</div>
+    </section>
+  </div>
+</main>
+<footer th:replace="~{fragments/ui :: sitefoot}"></footer>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Identificación')}"></head>
+<body>
+<header th:replace="~{fragments/ui :: sitehead('Carta')}"></header>
+<main class="container ">
+  <ol th:replace="~{fragments/ui :: pasos(3)}"></ol>
+  <div class="pagehead"><h1>Identificación</h1></div>
+  <div class="split">
+    <div class="stack">
+      <div class="panel stack">
+        <h2 th:text="${session.clienteId == null ? 'Continuar como invitado' : 'Continuar con mi cuenta'}">Continuar</h2>
+        <p class="muted" th:if="${session.clienteId == null}">No necesitas crear una cuenta. Te pediremos los datos de contacto al confirmar el pedido.</p>
+        <p class="muted" th:if="${session.clienteId != null}" th:text="|Pedido asociado a la cuenta de ${session.clienteNombre}.|">Pedido asociado a tu cuenta.</p>
+        <a class="btn btn-primary btn-block" th:href="@{/checkout/entrega(modalidad=${modalidad})}" th:text="${session.clienteId == null ? 'Continuar sin cuenta' : 'Continuar'}">Continuar</a>
+      </div>
+      <p class="muted" th:if="${session.clienteId == null}">¿Ya tienes una cuenta? <a th:href="@{/login}">Iniciar sesión</a> · <a th:href="@{/registro}">Crear cuenta</a></p>
+    </div>
+    <aside th:replace="~{fragments/ui :: resumenPedido}"></aside>
+  </div>
+</main>
+<footer th:replace="~{fragments/ui :: sitefoot}"></footer>
+</body>
+</html>

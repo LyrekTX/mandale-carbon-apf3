@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Cobro y comprobante')}"></head>
+<body>
+<div class="shell">
+  <aside th:replace="~{fragments/ui :: sidebar(${activoCajero})}"></aside>
+  <section>
+    <header class="topbar"><h1 th:text="${'Pedido ' + pedido.codigo()}">Pedido</h1><span class="row"><a class="btn btn-sm" th:href="@{/cajero}">Volver a cobros</a><button class="btn btn-sm" th:if="${comprobante != null}" type="button" onclick="window.print()">Imprimir comprobante</button></span></header>
+    <main class="content">
+      <p class="note" th:if="${mensajeCobro != null}" th:text="${mensajeCobro}"></p>
+      <p class="note" th:if="${errorCobro != null}" th:text="${errorCobro}"></p>
+      <div th:replace="~{fragments/ui :: estados(${pedido.estadoOp()},${pedido.estadoPago()})}"></div>
+      <div class="two-col">
+        <div class="panel stack">
+          <h2>Detalle real del pedido</h2>
+          <table class="tabla"><thead><tr><th>Producto</th><th>Cantidad</th><th>Subtotal</th></tr></thead>
+            <tbody><tr th:each="item : ${items}"><td th:text="${item.nombre()}">Producto</td><td th:text="${item.cantidad()}">1</td><td th:text="${item.subtotal()}">S/ 0.00</td></tr>
+              <tr th:if="${#lists.isEmpty(items)}"><td colspan="3">Este pedido no tiene productos.</td></tr></tbody>
+          </table>
+          <div class="item-total"><span>Cliente</span><strong th:text="${pedido.cliente()}">Cliente</strong></div>
+          <div class="item-total"><span>Canal</span><span th:text="${pedido.canal()}">Delivery</span></div>
+          <div class="item-total"><span>Pedido</span><span th:text="${pedido.hora()}">Fecha</span></div>
+          <div class="item-total total"><span>Total a cobrar</span><span th:text="${pedido.total()}">S/ 0.00</span></div>
+        </div>
+        <aside class="panel stack" th:if="${comprobante == null}">
+          <h2>Registrar cobro</h2>
+          <p class="muted">Elige cómo se pagó y qué comprobante se emitió. Ticket y boleta son tipos de comprobante; no cambian el monto del pedido.</p>
+          <form class="stack" method="post" th:action="@{/cajero/cobro/{codigo}(codigo=${pedido.codigo()})}">
+            <label class="field"><span>Medio de pago</span><select name="medio" required><option value="EFECTIVO">Efectivo</option><option value="YAPE">Yape</option><option value="PLIN">Plin</option><option value="TARJETA">Tarjeta</option></select></label>
+            <label class="field"><span>Tipo de comprobante</span><select name="comprobante" required><option value="TICKET">Ticket</option><option value="BOLETA">Boleta</option></select></label>
+            <button class="btn btn-primary btn-block" type="submit" th:disabled="${pedido.estadoPago() == 'Pagado'}">Confirmar pago y emitir</button>
+          </form>
+          <p class="muted">El pago se registra una sola vez. Después podrás revisar e imprimir el comprobante.</p>
+        </aside>
+        <aside class="panel stack" th:if="${comprobante != null}">
+          <h2 th:text="${'Comprobante: ' + comprobante.tipo()}">Comprobante</h2>
+          <div class="ph xl txt">Mandale Carbón · <span th:text="${comprobante.tipo()}">TICKET</span></div>
+          <div class="item-total"><span>Cliente</span><span th:text="${comprobante.cliente()}">Cliente</span></div>
+          <div class="item-total"><span>Medio de pago</span><span th:text="${comprobante.medio()}">EFECTIVO</span></div>
+          <div class="item-total"><span>Fecha de pago</span><span th:text="${comprobante.fecha()}">Fecha</span></div>
+          <div class="item-total total"><span>Total</span><span th:text="${pedido.total()}">S/ 0.00</span></div>
+          <button class="btn btn-primary" type="button" onclick="window.print()">Imprimir ticket / boleta</button>
+        </aside>
+      </div>
+    </main>
+  </section>
+</div>
+</body>
+</html>

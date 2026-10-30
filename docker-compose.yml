@@ -1,0 +1,33 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Developer
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:?Set MSSQL_SA_PASSWORD in .env}
+    ports:
+      - "1433:1433"
+    volumes:
+      - mandale-sql-data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -Q \"SELECT 1\" >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  app:
+    build: .
+    environment:
+      MC_DB_URL: jdbc:sqlserver://sqlserver:1433;databaseName=bd_mandale_carbon;encrypt=true;trustServerCertificate=true
+      MC_DB_USER: sa
+      MC_DB_PASSWORD: ${MSSQL_SA_PASSWORD:?Set MSSQL_SA_PASSWORD in .env}
+      MC_ADMIN_EMAIL: ${MC_ADMIN_EMAIL:?Set MC_ADMIN_EMAIL in .env}
+      MC_ADMIN_PASSWORD: ${MC_ADMIN_PASSWORD:?Set MC_ADMIN_PASSWORD in .env}
+    ports:
+      - "8080:8080"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
+volumes:
+  mandale-sql-data:

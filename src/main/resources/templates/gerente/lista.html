@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head(${titulo})}"></head>
+<body>
+<!-- Plantilla común: reportes, inventario, productos, pedidos/reservas y personal -->
+<div class="shell">
+  <aside th:replace="~{fragments/ui :: sidebar(${activo})}"></aside>
+  <section>
+    <header class="topbar"><h1 th:text="${titulo}">Título</h1><span class="row"><a class="btn" href="#" th:if="${botonSec != null}" th:text="${botonSec}">Exportar</a><a class="btn btn-primary" th:href="${botonUrl != null} ? @{${botonUrl}} : '#'" th:text="${boton}">Acción</a></span></header>
+    <main class="content">
+      <div class="note" th:if="${inventarioGuardado}">El registro de inventario se guardó correctamente en la base de datos.</div>
+      <div class="note" th:if="${mensajePersonal != null}" th:text="${mensajePersonal}"></div>
+      <div class="note" th:if="${inventarioError != null}" th:text="${inventarioError}"></div>
+      <div class="chips" th:if="${subtabs != null}">
+        <a class="chip" th:each="t : ${subtabs}" th:href="@{${t.url()}}" th:text="${t.etiqueta()}" th:classappend="${t.etiqueta() == tabActiva} ? 'on'">Pestaña</a>
+      </div>
+      <small th:if="${ayuda != null}" th:text="${ayuda}">Ayuda</small>
+      <form class="toolbar" method="get" th:if="${activo == 'Reportes'}" th:action="@{/gerente/reportes}">
+        <label class="field"><span>Desde</span><input type="date" name="desde" th:value="${desde}"></label>
+        <label class="field"><span>Hasta</span><input type="date" name="hasta" th:value="${hasta}"></label>
+        <button class="btn" type="submit">Filtrar</button>
+      </form>
+      <div class="toolbar" th:if="${filtros != null and activo != 'Reportes'}">
+        <label class="field" th:each="f : ${filtros}"><span th:text="${f.etiqueta()}">Filtro</span><input type="text" th:value="${f.valor()}"></label>
+      </div>
+      <th:block th:if="${kpis != null}"><div th:replace="~{fragments/ui :: kpis(${kpis},${#lists.size(kpis)})}"></div></th:block>
+      <table th:replace="~{fragments/ui :: tabla(${cabeceras},${filas})}"></table>
+    </main>
+  </section>
+</div>
+</body>
+</html>

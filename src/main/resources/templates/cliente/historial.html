@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Historial de pedidos')}"></head>
+<body>
+<header th:replace="~{fragments/ui :: sitehead('Pedidos')}"></header>
+<main class="container ">
+  <div class="pagehead"><h1>Historial de pedidos</h1></div>
+  <p class="muted" style="margin-bottom:16px">Pedidos realizados en este navegador mientras compras como invitado.</p>
+  <div class="panel" th:if="${#lists.isEmpty(pedidos)}">Todavía no tienes pedidos en esta sesión. <a th:href="@{/carta}">Ver la carta</a></div>
+  <div class="grid-2" th:unless="${#lists.isEmpty(pedidos)}">
+    <div class="panel stack" th:each="p : ${pedidos}">
+      <div class="between"><h2 th:text="${'#' + p.codigo()}">Pedido</h2><small th:text="${p.hora() + ' · ' + p.total()}">Fecha y total</small></div>
+      <div th:replace="~{fragments/ui :: estados(${p.estadoOp()},${p.estadoPago()})}"></div>
+      <a class="btn btn-block" th:if="${p.estadoOp() != 'Entregado'}" th:href="@{/seguimiento/{codigo}(codigo=${p.codigo()})}">Ver seguimiento</a>
+      <a class="btn btn-block" th:if="${p.estadoOp() == 'Entregado'}" th:href="@{/carta}">Pedir nuevamente</a>
+    </div>
+  </div>
+</main>
+<footer th:replace="~{fragments/ui :: sitefoot}"></footer>
+</body>
+</html>

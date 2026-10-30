@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Método de pago')}"></head>
+<body>
+<header th:replace="~{fragments/ui :: sitehead('Carta')}"></header>
+<main class="container ">
+  <ol th:replace="~{fragments/ui :: pasos(5)}"></ol>
+  <div class="pagehead"><h1>Método de pago</h1></div>
+  <div class="split">
+    <form class="stack" method="get" th:action="@{/checkout/revisar}">
+      <p class="muted">Elige cómo pagarás S/ 51.90.</p>
+      <div class="grid-2">
+        <label class="opt"><input type="radio" name="pago" checked><span><strong>Efectivo</strong><br><small>Indica con cuánto pagarás</small></span></label>
+        <label class="opt"><input type="radio" name="pago"><span><strong>Billetera digital</strong><br><small>Yape o Plin · adjuntar operación</small></span></label>
+        <label class="opt"><input type="radio" name="pago"><span><strong>Transferencia</strong><br><small>BCP o Interbank · adjuntar constancia</small></span></label>
+        <label class="opt"><input type="radio" name="pago"><span><strong>Tarjeta</strong><br><small>Crédito o débito</small></span></label>
+      </div>
+      <div class="note">El pago se valida por separado del avance de cocina y entrega.</div>
+      <button class="btn btn-primary" type="submit">Continuar</button>
+    </form>
+    <aside th:replace="~{fragments/ui :: resumenPedido}"></aside>
+  </div>
+</main>
+<footer th:replace="~{fragments/ui :: sitefoot}"></footer>
+</body>
+</html>

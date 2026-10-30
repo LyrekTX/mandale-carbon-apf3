@@ -1,0 +1,9 @@
+<!DOCTYPE html><html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Productos')}"></head><body><div class="shell">
+<aside th:replace="~{fragments/ui :: sidebar('Productos')}"></aside><section>
+<header class="topbar"><h1>Productos</h1><a class="btn btn-primary" th:href="@{/gerente/productos/nuevo}">+ Nuevo producto</a></header>
+<main class="content"><form class="toolbar" method="get" th:action="@{/gerente/productos}"><label class="field"><span>Buscar</span><input name="q" th:value="${q}" placeholder="Nombre del producto"></label><button class="btn" type="submit">Buscar</button></form>
+<table class="tabla"><thead><tr><th>Producto</th><th>Categoría</th><th>Precio</th><th>Stock</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>
+<tr th:each="p : ${productos}"><td th:text="${p.nombre}"></td><td th:text="${p.categoria.nombre}"></td><td th:text="'S/ ' + ${p.precio}"></td><td th:text="${p.stock}"></td><td th:text="${p.estado}"></td><td class="row"><a class="btn btn-sm" th:href="@{'/gerente/productos/' + ${p.id} + '/editar'}">Editar</a><form method="post" th:action="@{'/gerente/productos/' + ${p.id} + '/eliminar'}"><button class="btn btn-sm" type="submit">Eliminar</button></form></td></tr>
+<tr th:if="${#lists.isEmpty(productos)}"><td colspan="6">No hay productos registrados.</td></tr>
+</tbody></table></main></section></div></body></html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Mesas del salón')}"></head>
+<body>
+<div class="shell">
+  <aside th:replace="~{fragments/ui :: sidebar('Mesas')}"></aside>
+  <section>
+    <header class="topbar"><h1>Mesas del salón</h1><a class="btn btn-primary" th:href="@{/mesero/crear}">+ Crear pedido</a></header>
+    <main class="content">
+      <p class="muted">Estado y pedido activo de cada mesa, consultados desde la base de datos.</p>
+      <div class="grid-4">
+        <div class="card mesa" th:each="mesa : ${mesas}">
+          <div class="between"><strong th:text="${mesa.nombre()}">Mesa 01</strong><span class="pill" th:classappend="'tono-' + ${@tono.de(mesa.estado())}" th:text="${mesa.estado()}">Libre</span></div>
+          <small th:text="${mesa.detalle()}">Capacidad</small>
+          <a class="btn" th:if="${mesa.codigoPedido() != null}" th:href="@{/mesero/pedidos/{codigo}(codigo=${mesa.codigoPedido()})}">Abrir pedido</a>
+          <a class="btn" th:if="${mesa.estado() == 'Libre'}" th:href="@{/mesero/crear(mesaId=${mesa.id()})}">Crear pedido aquí</a>
+          <span class="muted" th:if="${mesa.estado() == 'Reservada'}">Mesa reservada</span>
+        </div>
+        <div class="panel" th:if="${#lists.isEmpty(mesas)}">No hay mesas registradas.</div>
+      </div>
+    </main>
+  </section>
+</div>
+</body>
+</html>

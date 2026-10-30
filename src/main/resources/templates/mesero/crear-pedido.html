@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Crear pedido')}"></head>
+<body>
+<div class="shell">
+  <aside th:replace="~{fragments/ui :: sidebar('Nuevo pedido')}"></aside>
+  <section>
+    <header class="topbar"><h1>Crear pedido</h1><a class="btn btn-sm" th:href="@{/mesero/pedidos}">Ver pedidos</a></header>
+    <main class="content">
+      <p class="note" th:if="${errorPedido != null}" th:text="${errorPedido}"></p>
+      <form class="two-col" method="post" th:action="@{/mesero/crear}" id="pedido-form">
+        <div class="stack">
+          <div class="panel stack">
+            <label class="field"><span>Nombre del cliente</span><input name="nombre" required maxlength="120"></label>
+            <label class="field"><span>Teléfono</span><input name="telefono" maxlength="20" placeholder="Opcional"></label>
+            <label class="field"><span>Canal</span><select name="canal" id="canal"><option value="Delivery">Delivery</option><option value="Recojo">Recojo</option><option value="Salon">Salón</option></select></label>
+            <label class="field" id="mesa-field"><span>Mesa libre</span><select name="mesaId" id="mesa"><option value="">Elige una mesa</option><option th:each="mesa : ${mesas}" th:value="${mesa.id()}" th:selected="${mesa.id() == mesaId}" th:text="${mesa.nombre() + ' · ' + mesa.detalle()}"></option></select></label>
+            <div class="stack-sm" id="delivery-fields">
+              <label class="field"><span>Dirección de entrega</span><input name="direccion" id="direccion" maxlength="250" placeholder="Calle, número y distrito"></label>
+              <label class="field"><span>Referencia</span><input name="referencia" id="referencia" maxlength="200" placeholder="Indicaciones para llegar"></label>
+            </div>
+            <label class="field"><span>Nota para cocina</span><textarea name="observacion" maxlength="300" placeholder="Indicaciones para preparar el pedido"></textarea></label>
+          </div>
+          <h2>Productos disponibles</h2>
+          <div class="grid-2">
+            <div class="card product-row" th:each="p : ${platos}" th:attr="data-price=${#strings.replace(p.precio(),'S/ ','')}">
+              <div class="between"><label class="row"><input class="product-check" type="checkbox" name="productoIds" th:value="${p.id()}"><strong th:text="${p.nombre()}">Plato</strong></label><span class="precio" th:text="${p.precio()}">S/ 0.00</span></div>
+              <small th:text="${p.detalle()}">Detalle</small>
+              <label class="field"><span>Cantidad</span><input class="product-qty" type="number" min="1" max="50" value="1" disabled th:name="${'cantidad_' + p.id()}"></label>
+            </div>
+          </div>
+        </div>
+        <aside class="panel stack">
+          <h2>Resumen del pedido</h2>
+          <div class="stack-sm" id="resumen-productos"><p class="muted">Selecciona productos para ver el resumen.</p></div>
+          <hr><div class="item-total total"><span>Total</span><span id="total">S/ 0.00</span></div>
+          <button class="btn btn-primary" type="submit">Guardar pedido y enviar a cocina</button>
+        </aside>
+      </form>
+    </main>
+  </section>
+</div>
+<script>
+  const canal=document.getElementById('canal'), mesa=document.getElementById('mesa'), mesaField=document.getElementById('mesa-field');
+  const deliveryFields=document.getElementById('delivery-fields'), direccion=document.getElementById('direccion');
+  function actualizarCanal(){const salon=canal.value==='Salon',delivery=canal.value==='Delivery';mesaField.hidden=!salon;mesa.required=salon;mesa.disabled=!salon;deliveryFields.hidden=!delivery;deliveryFields.querySelectorAll('input').forEach(input=>input.disabled=!delivery);direccion.required=delivery;}
+  canal.addEventListener('change',actualizarCanal);actualizarCanal();
+  document.querySelectorAll('.product-row').forEach(card=>{
+    const check=card.querySelector('.product-check'), qty=card.querySelector('.product-qty');
+    check.addEventListener('change',()=>{qty.disabled=!check.checked;actualizarTotal();});
+    qty.addEventListener('input',actualizarTotal);
+  });
+  function actualizarTotal(){let total=0;const resumen=document.getElementById('resumen-productos');resumen.replaceChildren();document.querySelectorAll('.product-row').forEach(card=>{const check=card.querySelector('.product-check');if(check.checked){const qty=Math.max(1,Number(card.querySelector('.product-qty').value||1)),precio=Number(card.dataset.price);total+=precio*qty;const linea=document.createElement('div');linea.className='item-total';const nombre=document.createElement('span');nombre.textContent=`${card.querySelector('strong').textContent} × ${qty}`;const subtotal=document.createElement('span');subtotal.textContent=`S/ ${(precio*qty).toFixed(2)}`;linea.append(nombre,subtotal);resumen.append(linea);}});if(!resumen.children.length){const vacio=document.createElement('p');vacio.className='muted';vacio.textContent='Selecciona productos para ver el resumen.';resumen.append(vacio);}document.getElementById('total').textContent=`S/ ${total.toFixed(2)}`;}
+</script>
+</body>
+</html>

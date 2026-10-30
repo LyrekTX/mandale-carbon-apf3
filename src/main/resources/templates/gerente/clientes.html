@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Clientes')}"></head>
+<body>
+<div class="shell">
+  <aside th:replace="~{fragments/ui :: sidebar('Clientes')}"></aside>
+  <section>
+    <header class="topbar"><h1>Clientes</h1><a class="btn btn-primary" th:href="@{/gerente/clientes/nuevo}">+ Nuevo cliente</a></header>
+    <main class="content">
+      <p class="note" th:if="${mensaje != null}" th:text="${mensaje}"></p>
+      <form class="toolbar" method="get" th:action="@{/gerente/clientes}">
+        <label class="field"><span>Buscar</span><input name="q" th:value="${q}" placeholder="Nombre, teléfono o correo"></label>
+        <label class="field"><span>Estado</span><select name="estado">
+          <option value="Activos" th:selected="${estado == 'Activos'}">Activos</option>
+          <option value="Inactivos" th:selected="${estado == 'Inactivos'}">Inactivos</option>
+          <option value="Todos" th:selected="${estado == 'Todos'}">Todos</option>
+        </select></label>
+        <button class="btn" type="submit">Filtrar</button>
+      </form>
+      <div class="tabla-wrap">
+        <table class="tabla">
+          <thead><tr><th>Nombre</th><th>Teléfono</th><th>Correo</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody>
+            <tr th:each="c : ${clientes}">
+              <td th:text="${c.nombre}"></td><td th:text="${c.telefono}"></td><td th:text="${c.correo}"></td>
+              <td><span class="tag" th:text="${c.activo ? 'Activo' : 'Inactivo'}"></span></td>
+              <td class="row">
+                <a class="btn btn-sm" th:href="@{'/gerente/clientes/' + ${c.id} + '/editar'}">Editar</a>
+                <form method="post" th:action="@{'/gerente/clientes/' + ${c.id} + '/estado'}">
+                  <button class="btn btn-sm" type="submit" th:text="${c.activo ? 'Desactivar' : 'Activar'}"></button>
+                </form>
+              </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(clientes)}"><td colspan="5">No hay clientes para mostrar con este filtro.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </section>
+</div>
+</body>
+</html>

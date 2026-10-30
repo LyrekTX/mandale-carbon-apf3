@@ -1,0 +1,7 @@
+<!DOCTYPE html><html lang="es" xmlns:th="http://www.thymeleaf.org"><head th:replace="~{fragments/ui :: head('Cliente')}"></head><body><div class="shell">
+<aside th:replace="~{fragments/ui :: sidebar('Clientes')}"></aside><section><header class="topbar"><h1 th:text="${cliente.id == null ? 'Nuevo cliente' : 'Editar cliente'}">Cliente</h1><a class="btn" th:href="@{/gerente/clientes}">Volver</a></header>
+<main class="content"><form class="panel stack" method="post" th:action="@{/gerente/clientes/guardar}" th:object="${cliente}"><input type="hidden" th:field="*{id}">
+<label class="field"><span>Nombre</span><input th:field="*{nombre}" maxlength="120" required><small th:errors="*{nombre}"></small></label>
+<label class="field"><span>Teléfono</span><input th:field="*{telefono}" maxlength="20"><small th:errors="*{telefono}"></small></label>
+<label class="field"><span>Correo</span><input type="email" th:field="*{correo}" maxlength="120"><small th:errors="*{correo}"></small></label>
+<button class="btn btn-primary" type="submit">Guardar cliente</button></form></main></section></div></body></html>

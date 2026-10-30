@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Ingresar a mi cuenta')}"></head>
+<body>
+<header th:replace="~{fragments/ui :: sitehead('Cuenta')}"></header>
+<main class="container narrow">
+  <div class="pagehead"><h1>Ingresar a mi cuenta</h1></div>
+  <form class="panel stack" method="post" th:action="@{/login}">
+    <p class="note" th:if="${errorLogin != null}" th:text="${errorLogin}"></p>
+    <label class="field"><span>Correo</span><input type="email" name="correo" autocomplete="email" required></label>
+    <label class="field"><span>Contraseña</span><input type="password" name="password" autocomplete="current-password" required></label>
+    <button class="btn btn-primary btn-block" type="submit">Ingresar</button>
+  </form>
+  <p class="center" style="margin-top:16px">¿Aún no tienes cuenta? <a th:href="@{/registro}" style="color:var(--ember)">Regístrate</a></p>
+  <p class="center"><a th:href="@{/carta}" style="color:var(--ember)">Continuar como invitado</a></p>
+</main>
+<footer th:replace="~{fragments/ui :: sitefoot}"></footer>
+</body>
+</html>

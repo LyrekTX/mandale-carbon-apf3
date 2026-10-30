@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Detalle de comanda')}"></head>
+<body>
+<div class="shell">
+  <aside th:replace="~{fragments/ui :: sidebar('Tablero de cocina')}"></aside>
+  <section>
+    <header class="topbar"><h1 th:text="${'Comanda #' + pedido.codigo()}">Comanda</h1><span class="row"><small th:text="${'Registrada: ' + pedido.hora()}">Fecha</small><a class="btn btn-sm" th:href="@{/cocina}">Volver al tablero</a></span></header>
+    <main class="content">
+      <div th:replace="~{fragments/ui :: estados(${pedido.estadoOp()},${pedido.estadoPago()})}"></div>
+      <div class="two-col">
+        <div class="stack">
+          <div class="card stack-sm" th:each="item : ${items}">
+            <h2 th:text="${item.cantidad() + ' × ' + item.nombre()}">Producto</h2>
+            <small th:text="${item.subtotal()}">Subtotal</small>
+            <div class="alerta" th:if="${item.observacion() != null and !item.observacion().isBlank()}" th:text="${item.observacion()}">Observación</div>
+          </div>
+          <div class="panel" th:if="${#lists.isEmpty(items)}">Este pedido todavía no tiene productos.</div>
+          <div class="note" th:if="${observacion != null and !observacion.isBlank()}" th:text="${'Nota del pedido: ' + observacion}"></div>
+        </div>
+        <aside class="stack">
+          <div class="panel stack-sm"><h2>Información</h2><small th:text="${'Modalidad: ' + pedido.canal()}">Modalidad</small><small th:text="${'Cliente: ' + pedido.cliente()}">Cliente</small><small th:text="${'Total: ' + pedido.total()}">Total</small></div>
+          <div class="panel stack-sm"><h2>Avanzar comanda</h2>
+            <form method="post" th:action="@{/cocina/comanda/{codigo}/estado(codigo=${pedido.codigo()})}" th:if="${pedido.estadoOp() == 'Por aceptar'}">
+              <input type="hidden" name="estado" value="En preparación"><button class="btn btn-primary btn-block" type="submit">Iniciar preparación</button>
+            </form>
+            <form method="post" th:action="@{/cocina/comanda/{codigo}/estado(codigo=${pedido.codigo()})}" th:if="${pedido.estadoOp() == 'En preparación'}">
+              <input type="hidden" name="estado" th:value="${pedido.canal() == 'Recojo' ? 'Listo para recoger' : 'Listo para llevar'}"><button class="btn btn-primary btn-block" type="submit">Marcar pedido listo</button>
+            </form>
+            <small th:if="${pedido.estadoOp() != 'Por aceptar' and pedido.estadoOp() != 'En preparación'}" th:text="${'Estado actual: ' + pedido.estadoOp()}">Estado</small>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </section>
+</div>
+</body>
+</html>

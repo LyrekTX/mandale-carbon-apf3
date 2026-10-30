@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Pedido confirmado')}"></head>
+<body>
+<header th:replace="~{fragments/ui :: sitehead('Pedidos')}"></header>
+<main class="container narrow nohead">
+  <ol th:replace="~{fragments/ui :: pasos(7)}"></ol>
+  <div class="stack center">
+    <div class="check">✓</div><h1>¡Recibimos tu pedido!</h1>
+    <p class="muted" th:text="${'Pedido #' + codigoPedido + ' · Registrado correctamente.'}">Pedido</p>
+  </div>
+  <div class="stack" style="margin-top:22px">
+    <div th:replace="~{fragments/ui :: estados(${pedido.estadoOp()},${pedido.estadoPago()})}"></div>
+    <div class="panel stack-sm"><h2>Enlace único de seguimiento</h2>
+      <a th:href="@{/seguimiento/{codigo}(codigo=${codigoPedido})}" style="color:var(--ember)" th:text="${codigoPedido}">Pedido</a>
+      <small th:text="${'Registrado el ' + pedido.hora() + '. Guarda el código para consultar el pedido sin iniciar sesión.'}">Guarda el código del pedido.</small></div>
+    <a class="btn btn-primary btn-block" th:href="@{/seguimiento/{codigo}(codigo=${codigoPedido})}">Seguir mi pedido</a>
+  </div>
+</main>
+<footer th:replace="~{fragments/ui :: sitefoot}"></footer>
+</body>
+</html>

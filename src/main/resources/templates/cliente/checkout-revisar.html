@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Revisar pedido')}"></head>
+<body>
+<header th:replace="~{fragments/ui :: sitehead('Carta')}"></header>
+<main class="container ">
+  <ol th:replace="~{fragments/ui :: pasos(6)}"></ol>
+  <div class="pagehead"><h1>Revisar pedido</h1></div>
+  <div class="split">
+    <div class="stack">
+      <p class="note" th:if="${errorPedido != null}" th:text="${errorPedido}"></p>
+      <form class="stack" method="post" th:action="@{/pedido/confirmar}">
+        <div class="card"><strong>Modalidad</strong><br><small th:text="${canalPedido}">Delivery</small></div>
+        <label class="field"><span>Nombre</span><input name="nombre" maxlength="120" required th:value="${clienteNombre}"></label>
+        <label class="field"><span>Teléfono</span><input name="telefono" maxlength="20" placeholder="Opcional" th:value="${clienteTelefono}"></label>
+        <label class="opt"><input type="checkbox" required><span>Confirmo los datos del pedido.</span></label>
+        <div class="note" th:if="${session.clienteId == null}">El pedido quedará pendiente. Los datos se usan como contacto para este pedido; también puedes <a th:href="@{/registro}">crear una cuenta</a>. El pago se coordina con el local.</div>
+        <div class="note" th:if="${session.clienteId != null}">El pedido quedará asociado a tu cuenta. El pago se coordina con el local.</div>
+        <button class="btn btn-primary" type="submit">Confirmar pedido</button>
+      </form>
+    </div>
+    <aside th:replace="~{fragments/ui :: resumenPedido}"></aside>
+  </div>
+</main>
+<footer th:replace="~{fragments/ui :: sitefoot}"></footer>
+</body>
+</html>

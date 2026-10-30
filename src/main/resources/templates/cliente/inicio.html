@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/ui :: head('Inicio')}"></head>
+<body>
+<header th:replace="~{fragments/ui :: sitehead('Inicio')}"></header>
+<main class="container nohead">
+  <section class="hero">
+    <div>
+      <h1>Parrilla al carbón, lista para ti</h1>
+      <p class="lead">Carne, pollo y chorizo a la brasa. Pide con delivery o recoge en el local, en Chiclayo.</p>
+      <div class="cta"><a class="btn btn-primary btn-lg" th:href="@{/carta}">Pedir ahora</a><a class="btn btn-lg" th:href="@{/reservas}">Reservar una mesa</a></div>
+      <ul class="facts">
+        <li><strong>30-50 min</strong><small>Delivery desde S/ 5</small></li>
+        <li><strong>20-30 min</strong><small>Recojo en local</small></li>
+        <li><strong>Av. Balta 1240</strong><small>Chiclayo</small></li>
+      </ul>
+    </div>
+    <div class="ph hero-img"><span>Foto principal · parrilla</span></div>
+  </section>
+  <section class="section">
+    <div class="between"><h2>Lo más pedido</h2><a th:href="@{/carta}">Ver carta completa</a></div>
+    <div class="chips" style="margin-bottom:18px"><a class="chip on" th:href="@{/carta}">Parrillas</a><a class="chip" th:href="@{/carta}">Combos</a><a class="chip" th:href="@{/carta}">Bebidas</a><a class="chip" th:href="@{/carta}">Guarniciones</a></div>
+    <div class="cards"><th:block th:each="p : ${platos}"><a th:replace="~{fragments/ui :: platoCard(${p})}"></a></th:block></div>
+  </section>
+  <section class="section band">
+    <div><h2>¿Vienes en grupo?</h2><p class="muted">Reserva tu mesa y te la guardamos 15 minutos.</p></div>
+    <a class="btn btn-primary btn-lg" th:href="@{/reservas}">Reservar mesa</a>
+  </section>
+</main>
+<footer th:replace="~{fragments/ui :: sitefoot}"></footer>
+</body>
+</html>
