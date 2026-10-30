@@ -14,6 +14,7 @@ Aplicación web Java 21, Spring Boot, Thymeleaf y SQL Server para gestionar cat�
 - Registro e inicio de sesión de clientes con contraseña BCrypt, vinculando pedidos de clientes registrados a su cuenta.
 - Alta de cuentas de personal por rol (mesero, cocina, cajero y repartidor) desde el panel del gerente.
 - Selector de tema claro/nocturno guardado en el navegador.
+- Búsqueda de clientes que ignora mayúsculas, espacios extremos y tildes, implementada con Apache Commons Lang (`StringUtils.stripAccents`).
 - Entidades y repositorios JPA/Spring Data para productos, categorías, clientes, pedidos y sus detalles, roles, usuarios y ventas. El registro de cobros sigue usando `JdbcTemplate` con transacción SQL.
 
 Las reservas, el inventario básico de ingredientes e insumos y el reparto están conectados a SQL Server. La gestión de recetas, la facturación electrónica y los pagos electrónicos no forman parte de esta versión.
@@ -48,9 +49,9 @@ Abre `http://localhost:8080/acceso` e ingresa con `MC_ADMIN_EMAIL` y `MC_ADMIN_P
 
 ## Pruebas automatizadas
 
-Ejecuta `mvn test` para correr las pruebas unitarias. Las pruebas de servicios usan Mockito y no requieren una conexión a SQL Server. Cubren la activación y desactivación de clientes, los filtros de la lista y las validaciones iniciales de pedidos para los canales configurados.
+Ejecuta `mvn test` para correr las pruebas unitarias. Las pruebas de servicios usan Mockito y no requieren una conexión a SQL Server. Cubren la activación y desactivación de clientes, la búsqueda sin tildes, los filtros de la lista y las validaciones iniciales de pedidos para los canales configurados.
 
-Las funcionalidades se desarrollaron antes de añadir estas pruebas de regresión; para demostrar TDD en los siguientes cambios, primero escribe una prueba que falle, implementa la regla y vuelve a ejecutar la suite.
+Las pruebas iniciales se añadieron después de implementar sus funcionalidades. La mejora de búsqueda sin tildes sí siguió TDD: primero se añadió la prueba, se confirmó que fallaba y luego se implementó la regla hasta que pasó.
 
 ## Documentación Javadoc
 

@@ -15,8 +15,8 @@
 
 1. **GitHub:** el repositorio privado ya está publicado y contiene dos commits. Falta documentar los hitos solicitados por el curso y acompañarlos con evidencias; el historial actual no demuestra por sí mismo una entrega histórica al 40 %.
 2. **Avances al 40%:** registrar los hitos que solicita el curso como commits separados y documentarlos con fechas/descripciones. El commit inicial actual no demuestra por sí solo esa secuencia histórica.
-3. **TDD:** las pruebas actuales son de regresión añadidas después de implementar las funciones. En las siguientes mejoras, crear primero una prueba fallida, implementar el comportamiento y luego comprobar que pase; describir honestamente la diferencia en la sustentación.
-4. **Librería de apoyo:** la consigna ofrece Guava, Apache POI, Apache Commons y Logback como ejemplos. Verificar qué dependencia se usará realmente y vincularla a una necesidad concreta del sistema antes de afirmar que se cumple este punto.
+3. **TDD:** las pruebas iniciales eran de regresión añadidas después de implementar las funciones. La nueva búsqueda de clientes sin tildes sí siguió un ciclo TDD: la prueba falló primero y pasó tras integrar Apache Commons Lang. Aplicar el mismo proceso en los siguientes cambios.
+4. **Librería de apoyo:** integrado Apache Commons Lang para que la búsqueda de clientes no distinga tildes. El uso está descrito en el README y cubierto por una prueba unitaria.
 5. **Javadoc:** completado para los paquetes, servicios, controladores, modelos y repositorios. Se genera con `docs/generar-javadoc.ps1` y queda en `docs/javadoc/index.html`.
 6. **Sustentación:** preparar diapositivas de hasta 10 minutos, probar la demostración y distribuir la exposición entre los integrantes, si es grupal.
 7. **Evidencias:** agregar capturas del sistema, GitHub, pruebas, arquitectura y taller de versionamiento cuando estén disponibles. No declarar asistencia al taller ni participación que no se haya confirmado.

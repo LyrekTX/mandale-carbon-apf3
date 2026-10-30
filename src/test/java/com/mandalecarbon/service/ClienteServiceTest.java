@@ -61,6 +61,13 @@ class ClienteServiceTest {
     }
 
     @Test
+    void buscarIgnoraTildesEnNombresDeClientes() {
+        when(repo.findAll()).thenReturn(List.of(activo, inactivo));
+
+        assertEquals(List.of(inactivo), service.buscar("Perez", "Inactivos"));
+    }
+
+    @Test
     void cambiarEstadoDesactivaUnClienteActivo() {
         when(repo.findById(1)).thenReturn(Optional.of(activo));
 
